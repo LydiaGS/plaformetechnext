@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./public/css/style.css">
+    <title>Technext_campus</title>
+</head>
+<body>
+    <header class="topbar">
+    <div class="brand">Campus · Intra</div>
+    <nav class="nav">
+      <a href="#/dashboard">Tableau de bord</a>
+      <a href="#/cursus">Cursus</a>
+      <a href="#/projets">Projets</a>
+      <a href="#/cluster">Cluster</a>
+      <a href="#/annonces">Annonces</a>
+    </nav>
+    <div class="user-info" id="userInfo"></div>
+  </header>
+
+  <main id="view">
+    <!-- Auth -->
+    <section id="auth" class="card">
+      <h2>Connexion</h2>
+      <form id="loginForm">
+        <label>Email
+          <input type="email" id="email" placeholder="prenom.nom@campus.edu" required />
+        </label>
+        <label>Mot de passe
+          <input type="password" id="password" placeholder="••••••••" required />
+        </label>
+        <label class="inline">
+          <input type="checkbox" id="rgpd" /> J’accepte la politique de confidentialité (RGPD)
+        </label>
+        <button type="submit">Se connecter</button>
+        <p class="muted">Démo locale : pas d’envoi au serveur, rôles mockés.</p>
+      </form>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="grid hidden">
+      <div class="card">
+        <h3>Progression</h3>
+        <div id="progressBar" class="progress"><span style="width: 0%"></span></div>
+        <p id="levelText">Niveau —</p>
+      </div>
+      <div class="card">
+        <h3>Notifications</h3>
+        <ul id="notifications"></ul>
+      </div>
+      <div class="card">
+        <h3>Blackhole</h3>
+        <p>Temps restant: <span id="blackholeCountdown">—</span></p>
+      </div>
+      <div class="card">
+        <h3>Événements</h3>
+        <ul id="events"></ul>
+      </div>
+    </section>
+
+    <!-- Cursus -->
+    <section id="cursus" class="card hidden">
+      <h2>Graph de progression</h2>
+      <svg id="cursusGraph" viewBox="0 0 600 300" role="img" aria-label="Graph de cursus"></svg>
+      <div id="skills" class="chips"></div>
+    </section>
+
+    <!-- Projets -->
+    <section id="projets" class="card hidden">
+      <h2>Projets & évaluations</h2>
+      <div class="toolbar">
+        <button id="newProjectBtn">Nouveau projet</button>
+        <button id="syncGitBtn">Synchroniser Git</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th><th>Deadline</th><th>Status</th><th>Note</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="projectsTable"></tbody>
+      </table>
+      <dialog id="evalDialog">
+        <form method="dialog">
+          <h3>Évaluation P2P</h3>
+          <label>Critères
+            <textarea id="rubric" placeholder="Respect des consignes, qualité du code..."></textarea>
+          </label>
+          <label>Score
+            <input type="number" id="score" min="0" max="125" />
+          </label>
+          <menu>
+            <button value="cancel">Annuler</button>
+            <button id="submitEval" value="default">Valider</button>
+          </menu>
+        </form>
+      </dialog>
+    </section>
+
+    <!-- Cluster -->
+    <section id="cluster" class="card hidden">
+      <h2>Cluster & présence</h2>
+      <div class="legend">
+        <span class="chip free">Libre</span>
+        <span class="chip busy">Occupé</span>
+        <span class="chip down">Maintenance</span>
+      </div>
+      <div id="clusterGrid" class="cluster-grid"></div>
+    </section>
+
+    <!-- Annonces -->
+    <section id="annonces" class="card hidden">
+      <h2>Annonces & communication</h2>
+      <div class="toolbar">
+        <input id="searchAnnouncements" placeholder="Rechercher..." />
+        <button id="newAnnouncementBtn">Publier</button>
+      </div>
+      <ul id="announcements" class="feed"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>© Campus — Démo Intra • RGPD • Conditions</small>
+  </footer>
+<script src="./public/javascripts/scripts.js"></script>
+<script src="./public/javascripts/server.js"></script>
+</body>
+</html>
