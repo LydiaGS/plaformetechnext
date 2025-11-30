@@ -64,3 +64,11 @@ legend .chip { margin-right: 8px; }
 
 .footer { text-align: center; color: var(--muted); padding: 20px; }
 .muted { color: var(--muted); font-size: 12px; }
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr; /* une seule colonne sur mobile */
+  }
+  .toolbar {
+    flex-direction: column;
+  }
+}

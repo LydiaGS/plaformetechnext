@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>Technext_campus</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Campus · Intra</div>
+    <nav class="nav">
+      <a href="#/dashboard">Tableau de bord</a>
+      <a href="#/cursus">Cursus</a>
+      <a href="#/projets">Projets</a>
+      <a href="#/cluster">Cluster</a>
+      <a href="#/annonces">Annonces</a>
+    </nav>
+    <div class="user-info" id="userInfo"></div>
+  </header>
+
+  <main id="view">
+    <!-- Auth -->
+<section id="auth" class="card">
+<h2>Créer un compte</h2>
+<form id="signupForm">
+  <input type="email" id="signupEmail" placeholder="Email" required>
+  <input type="password" id="signupPassword" placeholder="Mot de passe" required>
+  <button type="submit">Créer un compte</button>
+</form>
+
+  <h2>Connexion</h2>
+<form id="loginForm">
+  <input type="text" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Mot de passe">
+  <button type="submit">Connexion</button>
+</form>
+</section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="grid hidden">
+      <div class="card">
+        <h3>Progression</h3>
+        <div id="progressBar" class="progress"><span style="width: 0%"></span></div>
+        <p id="levelText">Niveau —</p>
+      </div>
+      <div class="card">
+        <h3>Notifications</h3>
+        <ul id="notifications"></ul>
+      </div>
+      <div class="card">
+        <h3>Blackhole</h3>
+        <p>Temps restant: <span id="blackholeCountdown">—</span></p>
+      </div>
+      <div class="card">
+        <h3>Événements</h3>
+        <ul id="events"></ul>
+      </div>
+    </section>
+
+    <!-- Cursus -->
+    <section id="cursus" class="card hidden">
+      <h2>Graph de progression</h2>
+      <svg id="cursusGraph" viewBox="0 0 600 300" role="img" aria-label="Graph de cursus"></svg>
+      <div id="skills" class="chips"></div>
+    </section>
+
+    <!-- Projets -->
+    <section id="projets" class="card hidden">
+      <h2>Projets & évaluations</h2>
+      <div class="toolbar">
+        <button id="newProjectBtn">Nouveau projet</button>
+        <button id="syncGitBtn">Synchroniser Git</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th><th>Deadline</th><th>Status</th><th>Note</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="projectsTable"></tbody>
+      </table>
+      <dialog id="evalDialog">
+        <form method="dialog">
+          <h3>Évaluation P2P</h3>
+          <label>Critères
+            <textarea id="rubric" placeholder="Respect des consignes, qualité du code..."></textarea>
+          </label>
+          <label>Score
+            <input type="number" id="score" min="0" max="125" />
+          </label>
+          <menu>
+            <button value="cancel">Annuler</button>
+            <button id="submitEval" value="default">Valider</button>
+          </menu>
+        </form>
+      </dialog>
+    </section>
+
+    <!-- Cluster -->
+    <section id="cluster" class="card hidden">
+      <h2>Cluster & présence</h2>
+      <div class="legend">
+        <span class="chip free">Libre</span>
+        <span class="chip busy">Occupé</span>
+        <span class="chip down">Maintenance</span>
+      </div>
+      <div id="clusterGrid" class="cluster-grid"></div>
+    </section>
+
+    <!-- Annonces -->
+    <section id="annonces" class="card hidden">
+      <h2>Annonces & communication</h2>
+      <div class="toolbar">
+        <input id="searchAnnouncements" placeholder="Rechercher..." />
+        <button id="newAnnouncementBtn">Publier</button>
+      </div>
+      <ul id="announcements" class="feed"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>© Campus — Démo Intra • RGPD • Conditions</small>
+  </footer>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("http://localhost:3000/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+  console.log(data);
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+    alert("Connexion réussie !");
+  } else {
+    alert("Erreur : " + data.error);
+  }
+});
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
+
+  const res = await fetch("http://localhost:3000/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+  console.log("Signup:", data);
+
+  if (data.error) {
+    alert("Erreur : " + data.error);
+  } else {
+    alert("Compte créé avec succès !");
+  }
+});
+</script>
+
+  <!-- Scripts front uniquement -->
+   <script src="./javascripts/scripts.js"></script>
+  <script type="module" src="./javascripts/init.js"></script>
+  <script type="module" src="./javascripts/auth.js"></script>
+  <script type="module" src="./javascripts/dashboard.js"></script>
+  <script type="module" src="./javascripts/project.js"></script>
+  <script type="module" src="./javascripts/router.js"></script>
+  <script type="module" src="./javascripts/state.js"></script>
+</body>
+</html>
