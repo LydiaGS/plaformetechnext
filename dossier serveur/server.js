@@ -40,7 +40,7 @@ function authMiddleware(req, res, next) {
 
   const token = authHeader.split(" ")[1];
   try {
-    const decoded = jwt.verify(token, "secretKey"); // clé secrète à garder privée
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // 🔥 clé secrète depuis variable d'environnement
     req.user = decoded;
     next();
   } catch {
@@ -81,7 +81,8 @@ app.post("/auth/login", (req, res) => {
   const valid = bcrypt.compareSync(password, user.password);
   if (!valid) return res.status(401).json({ error: "Mot de passe invalide" });
 
-  const token = jwt.sign({ id: user.id, email: user.email }, "secretKey", { expiresIn: "1h" });
+  // 🔥 Utilisation de la variable d'environnement JWT_SECRET
+  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
   res.json({ token });
 });
 
@@ -98,6 +99,7 @@ app.post("/projects", authMiddleware, (req, res) => {
 });
 
 // --- Lancement du serveur ---
-app.listen(3000, () => {
-  console.log("✅ API running on http://localhost:3000");
+const PORT = process.env.PORT || 3000; // 🔥 port configurable via variable d'environnement
+app.listen(PORT, () => {
+  console.log(`✅ API running on http://localhost:${PORT}`);
 });
